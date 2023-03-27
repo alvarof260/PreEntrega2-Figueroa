@@ -17,23 +17,62 @@ const productosArray = [
     new Producto(15, 'Nike Dunk High Retro', 'nikedunk.jpg', false, 25900, 'zapatillas',10)
 ]
 
-let catalogo = 'Elegi los productos segun su numero:\n0 - dejar de comprar\n'
-productosArray.forEach(producto => {
-    catalogo += `${producto.id} - ${producto.nombre}\n`
-})
-let productoBuscado = Number(prompt(catalogo))
-let productoEncontrado = productosArray.find(producto=> producto.id === productoBuscado)
-const carrito = []
-carrito.push(productoEncontrado)
-let mostrarCarrito = carrito.map(producto=>{
-    return precio: 
-})
-console.log(productoEncontrado)
-console.log(carrito)
+//mostrar catalogo
+function mostrarCatalogo() {
+    let catalogo = 'Elegi los productos segun su numero:\n0 - dejar de comprar\n'
+    productosArray.forEach(producto => {
+        catalogo += `${producto.id} - ${producto.nombre}\n`
+    })
+    let productoBuscado = Number(prompt(catalogo))
+    return productoBuscado
+}
 
-//mostrar lista de productos
-//cargar al carrito
-//eliminar cantidad de un productos
-//aumentar elemento del carrito
-//vaciar al carrito
-//validacion del pago
+//encontrar producto
+function buscarProducto(id) {
+    let productoEncontrado = productosArray.find(producto=> producto.id === id)
+    return productoEncontrado
+}
+
+//cargar producto al carrito
+function agregarUnProducto(productoEncontrado){
+    let posicionProducto = carrito.findIndex(producto => producto.id === productoEncontrado.id)
+
+    if (posicionProducto != -1) {
+        //aumentar elemento del carrito
+        carrito[posicionProducto].unidades++
+        carrito[posicionProducto].stock = carrito[posicionProducto].stock - 1
+        carrito[posicionProducto].subtotal = carrito[posicionProducto].precioUnidad * carrito[posicionProducto].unidades 
+    } else{
+        carrito.push({
+            id: productoEncontrado.id,
+            nombre: productoEncontrado.nombre,
+            precioUnidad: productoEncontrado.precio,
+            subtotal: productoEncontrado.precio,
+            stock: productoEncontrado.stock - 1,
+            unidades: 1
+        })
+    }
+}
+
+//mostrar carrito
+function mostrarCarrito(carrito) {
+    let carritoDatos = carrito.map(producto => `${producto.nombre} x${producto.unidades} - $${producto.precioUnidad}`).join('\n')
+    let carritoMonto = carrito.reduce((total, producto)=> total + producto.subtotal,0)
+    let mensaje = `${carritoDatos}\nTotal: $${carritoMonto}`
+    return mensaje
+}
+const carrito = []
+let productoInput = mostrarCatalogo()
+while (productoInput != 0) {
+    if (productoInput > -1 && productoInput < 16) {
+        let productoEncontrado = buscarProducto(productoInput)
+        agregarUnProducto(productoEncontrado)
+        console.log(carrito)
+        alert(mostrarCarrito(carrito))
+        productoInput = mostrarCatalogo()
+    } else {
+        alert('ingreso un numero de id que no existe')
+        productoInput = mostrarCatalogo()
+    }
+}
+alert(mostrarCarrito(carrito))
