@@ -61,6 +61,7 @@ function mostrarCarrito(carrito) {
     let mensaje = `${carritoDatos}\nTotal: $${carritoMonto}`
     return mensaje
 }
+
 const carrito = []
 let productoInput = mostrarCatalogo()
 while (productoInput != 0) {
